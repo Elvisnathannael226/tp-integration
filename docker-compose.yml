@@ -1,0 +1,156 @@
+services:
+
+  # ─────────────────────────────────────────
+  # PostgreSQL — datasource Grafana (requis par le TP)
+  # ─────────────────────────────────────────
+  postgres:
+    image: postgres:15
+    container_name: glpi_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - glpi_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # ─────────────────────────────────────────
+  # MariaDB — base de données GLPI
+  # (GLPI ne supporte pas PostgreSQL nativement)
+  # ─────────────────────────────────────────
+  mariadb:
+    image: mariadb:10.11
+    container_name: glpi_mariadb
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    networks:
+      - glpi_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "--password=${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # ─────────────────────────────────────────
+  # GLPI — système de gestion de parc ITSM
+  # ─────────────────────────────────────────
+  glpi:
+    image: diouxx/glpi
+    container_name: glpi_app
+    restart: unless-stopped
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    ports:
+      - "8080:80"
+    environment:
+      GLPI_DB_HOST: mariadb
+      GLPI_DB_NAME: ${MYSQL_DATABASE}
+      GLPI_DB_USER: ${MYSQL_USER}
+      GLPI_DB_PASSWD: ${MYSQL_PASSWORD}
+      TIMEZONE: Europe/Paris
+    volumes:
+      - glpi_files:/var/www/html/files
+      - glpi_plugins:/var/www/html/plugins
+    networks:
+      - glpi_network
+
+  # ─────────────────────────────────────────
+  # Grafana — tableaux de bord & visualisation
+  # ─────────────────────────────────────────
+  grafana:
+    image: grafana/grafana:latest
+    container_name: glpi_grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GF_SECURITY_ADMIN_USER}
+      GF_SECURITY_ADMIN_PASSWORD: ${GF_SECURITY_ADMIN_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+    networks:
+      - glpi_network
+    depends_on:
+      - postgres
+      - mariadb
+      - prometheus
+
+  # ─────────────────────────────────────────
+  # cAdvisor — métriques des conteneurs Docker
+  # ─────────────────────────────────────────
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: glpi_cadvisor
+    restart: unless-stopped
+    privileged: true
+    ports:
+      - "8081:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+    devices:
+      - /dev/kmsg
+    networks:
+      - glpi_network
+
+  # ─────────────────────────────────────────
+  # Prometheus — collecte et stockage métriques
+  # ─────────────────────────────────────────
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: glpi_prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--storage.tsdb.retention.time=${PROMETHEUS_RETENTION}"
+      - "--web.console.libraries=/usr/share/prometheus/console_libraries"
+      - "--web.console.templates=/usr/share/prometheus/consoles"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    networks:
+      - glpi_network
+    depends_on:
+      - cadvisor
+
+networks:
+  glpi_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  mariadb_data:
+  glpi_files:
+  glpi_plugins:
+  grafana_data:
+  prometheus_data:

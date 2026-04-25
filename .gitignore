@@ -1,0 +1,28 @@
+# Variables d'environnement sensibles
+.env
+
+# Volumes Docker locaux
+volumes/
+
+# Fichiers temporaires
+*.tmp
+*.log
+*.swp
+*.bak
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# Node (si scripts utilitaires)
+node_modules/
+
+# Python
+__pycache__/
+*.pyc

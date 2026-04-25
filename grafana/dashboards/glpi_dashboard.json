@@ -1,0 +1,836 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "Tableau de bord GLPI - Gestion des tickets et équipements",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 10,
+      "title": "Vue d'ensemble",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "glpi-mysql"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 50
+              },
+              {
+                "color": "red",
+                "value": 100
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 1
+      },
+      "id": 1,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "title": "Tickets Ouverts",
+      "type": "stat",
+      "targets": [
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "glpi-mysql"
+          },
+          "format": "table",
+          "rawSql": "SELECT COUNT(*) AS total FROM glpi_tickets WHERE status NOT IN (5, 6);",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "glpi-mysql"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "blue",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 6,
+        "y": 1
+      },
+      "id": 2,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "title": "Tickets créés aujourd'hui",
+      "type": "stat",
+      "targets": [
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "glpi-mysql"
+          },
+          "format": "table",
+          "rawSql": "SELECT COUNT(*) AS total FROM glpi_tickets WHERE DATE(date_creation) = CURDATE();",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "glpi-mysql"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "purple",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 12,
+        "y": 1
+      },
+      "id": 3,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "title": "Équipements enregistrés",
+      "type": "stat",
+      "targets": [
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "glpi-mysql"
+          },
+          "format": "table",
+          "rawSql": "SELECT (SELECT COUNT(*) FROM glpi_computers WHERE is_deleted = 0) + (SELECT COUNT(*) FROM glpi_peripherals WHERE is_deleted = 0) AS total;",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "glpi-mysql"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "semi-dark-yellow",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 18,
+        "y": 1
+      },
+      "id": 11,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "title": "Utilisateurs actifs",
+      "type": "stat",
+      "targets": [
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "glpi-mysql"
+          },
+          "format": "table",
+          "rawSql": "SELECT COUNT(*) AS total FROM glpi_users WHERE is_deleted = 0 AND is_active = 1;",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 5
+      },
+      "id": 20,
+      "title": "Analyse des tickets",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "glpi-mysql"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "mappings": []
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 6
+      },
+      "id": 4,
+      "options": {
+        "displayLabels": [
+          "name",
+          "percent"
+        ],
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "values": [
+            "value",
+            "percent"
+          ]
+        },
+        "pieType": "pie",
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "title": "Répartition des tickets par statut",
+      "type": "piechart",
+      "targets": [
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "glpi-mysql"
+          },
+          "format": "table",
+          "rawSql": "SELECT\n  CASE status\n    WHEN 1 THEN 'Nouveau'\n    WHEN 2 THEN 'En cours (attribué)'\n    WHEN 3 THEN 'En cours (planifié)'\n    WHEN 4 THEN 'En attente'\n    WHEN 5 THEN 'Résolu'\n    WHEN 6 THEN 'Clos'\n    ELSE 'Inconnu'\n  END AS statut,\n  COUNT(*) AS nombre\nFROM glpi_tickets\nGROUP BY status\nORDER BY status;",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "glpi-mysql"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 16,
+        "x": 8,
+        "y": 6
+      },
+      "id": 5,
+      "options": {
+        "legend": {
+          "calcs": [
+            "sum",
+            "max"
+          ],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "title": "Évolution des tickets (30 derniers jours)",
+      "type": "timeseries",
+      "targets": [
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "glpi-mysql"
+          },
+          "format": "time_series",
+          "rawSql": "SELECT\n  DATE(date_creation) AS time,\n  COUNT(*) AS `Tickets créés`\nFROM glpi_tickets\nWHERE date_creation >= DATE_SUB(NOW(), INTERVAL 30 DAY)\nGROUP BY DATE(date_creation)\nORDER BY DATE(date_creation);",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "glpi-mysql"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1
+          },
+          "mappings": [],
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 14
+      },
+      "id": 6,
+      "options": {
+        "barRadius": 0.05,
+        "barWidth": 0.7,
+        "groupWidth": 0.7,
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "horizontal",
+        "showValue": "auto",
+        "stacking": "none",
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 200
+      },
+      "title": "Top 5 catégories de tickets",
+      "type": "barchart",
+      "targets": [
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "glpi-mysql"
+          },
+          "format": "table",
+          "rawSql": "SELECT\n  COALESCE(ic.name, 'Sans catégorie') AS categorie,\n  COUNT(t.id) AS nombre\nFROM glpi_tickets t\nLEFT JOIN glpi_itilcategories ic ON ic.id = t.itilcategories_id\nGROUP BY ic.name\nORDER BY nombre DESC\nLIMIT 5;",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "glpi-mysql"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Statut"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "1": {
+                        "color": "blue",
+                        "index": 0,
+                        "text": "Nouveau"
+                      }
+                    },
+                    "type": "value"
+                  },
+                  {
+                    "options": {
+                      "2": {
+                        "color": "orange",
+                        "index": 1,
+                        "text": "En cours (attribué)"
+                      }
+                    },
+                    "type": "value"
+                  },
+                  {
+                    "options": {
+                      "3": {
+                        "color": "yellow",
+                        "index": 2,
+                        "text": "En cours (planifié)"
+                      }
+                    },
+                    "type": "value"
+                  },
+                  {
+                    "options": {
+                      "4": {
+                        "color": "purple",
+                        "index": 3,
+                        "text": "En attente"
+                      }
+                    },
+                    "type": "value"
+                  },
+                  {
+                    "options": {
+                      "5": {
+                        "color": "green",
+                        "index": 4,
+                        "text": "Résolu"
+                      }
+                    },
+                    "type": "value"
+                  },
+                  {
+                    "options": {
+                      "6": {
+                        "color": "grey",
+                        "index": 5,
+                        "text": "Clos"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Priorité"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "1": {
+                        "color": "grey",
+                        "index": 0,
+                        "text": "Très basse"
+                      }
+                    },
+                    "type": "value"
+                  },
+                  {
+                    "options": {
+                      "2": {
+                        "color": "blue",
+                        "index": 1,
+                        "text": "Basse"
+                      }
+                    },
+                    "type": "value"
+                  },
+                  {
+                    "options": {
+                      "3": {
+                        "color": "green",
+                        "index": 2,
+                        "text": "Moyenne"
+                      }
+                    },
+                    "type": "value"
+                  },
+                  {
+                    "options": {
+                      "4": {
+                        "color": "orange",
+                        "index": 3,
+                        "text": "Haute"
+                      }
+                    },
+                    "type": "value"
+                  },
+                  {
+                    "options": {
+                      "5": {
+                        "color": "red",
+                        "index": 4,
+                        "text": "Très haute"
+                      }
+                    },
+                    "type": "value"
+                  },
+                  {
+                    "options": {
+                      "6": {
+                        "color": "dark-red",
+                        "index": 5,
+                        "text": "Majeure"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 14
+      },
+      "id": 7,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Date création"
+          }
+        ]
+      },
+      "title": "Tickets récents (20 derniers)",
+      "type": "table",
+      "targets": [
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "glpi-mysql"
+          },
+          "format": "table",
+          "rawSql": "SELECT\n  t.id AS `ID`,\n  t.name AS `Titre`,\n  t.status AS `Statut`,\n  DATE(t.date_creation) AS `Date création`,\n  t.priority AS `Priorité`\nFROM glpi_tickets t\nORDER BY t.date_creation DESC\nLIMIT 20;",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 22
+      },
+      "id": 30,
+      "title": "Analyse SLA & Priorités",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "mysql",
+        "uid": "glpi-mysql"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisPlacement": "auto",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineWidth": 1
+          },
+          "mappings": [],
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 23
+      },
+      "id": 8,
+      "options": {
+        "barRadius": 0.05,
+        "barWidth": 0.6,
+        "groupWidth": 0.7,
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "orientation": "auto",
+        "showValue": "always",
+        "stacking": "none",
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        },
+        "xTickLabelRotation": 0
+      },
+      "title": "Tickets par priorité",
+      "type": "barchart",
+      "targets": [
+        {
+          "datasource": {
+            "type": "mysql",
+            "uid": "glpi-mysql"
+          },
+          "format": "table",
+          "rawSql": "SELECT\n  CASE priority\n    WHEN 1 THEN 'Très basse'\n    WHEN 2 THEN 'Basse'\n    WHEN 3 THEN 'Moyenne'\n    WHEN 4 THEN 'Haute'\n    WHEN 5 THEN 'Très haute'\n    WHEN 6 THEN 'Majeure'\n    ELSE 'Inconnue'\n  END AS priorite,\n  COUNT(*) AS nombre\nFROM glpi_tickets\nGROUP BY priority\nORDER BY priority;",
+          "refId": "A"
+        }
+      ]
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 38,
+  "tags": [
+    "glpi",
+    "itsm",
+    "tickets"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-30d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "Europe/Paris",
+  "title": "GLPI - Gestion des Tickets",
+  "uid": "glpi-tickets-dashboard",
+  "version": 1
+}
