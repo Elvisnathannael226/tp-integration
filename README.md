@@ -1,6 +1,8 @@
 # TP Final — Intégration Logicielle
 
-**Groupe :** Kabore Cedric, Korogo Gaetan, Tiendrebeogo Elvis Nathannael
+**Groupe 5 :** Kabore Cedric, 
+                                Korogo Gaetan, 
+                                                    Tiendrebeogo Elvis Nathannael
 
 ---
 
