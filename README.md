@@ -110,10 +110,10 @@ docker compose logs -f glpi
 2. Passer l'étape de compatibilité (cliquer **Continuer**)
 3. À l'étape "Connexion à la base de données", entrer :
 
-| Champ | Valeur |
-|-------|--------|
-| Serveur SQL | `mariadb:3306` |
-| Utilisateur SQL | `glpi_user` |
+|       Champ      |     Valeur     |
+|------------------|----------------|
+| Serveur SQL      | `mariadb:3306` |
+| Utilisateur SQL  | `glpi_user`    |
 | Mot de passe SQL | `Gl9xP@ssw0rd` |
 
 4. Sélectionner la base existante `glpi` → **Continuer**
@@ -122,11 +122,11 @@ docker compose logs -f glpi
 
 ### Étape 6 — Accéder aux autres services
 
-| Service | URL |
-|---------|-----|
-| GLPI | http://localhost:8080 |
-| Grafana | http://localhost:3000 |
-| Prometheus | http://localhost:9090 |
+|       Service      |            URL                |
+|--------------------|-------------------------------|
+| GLPI               | http://localhost:8080         |
+| Grafana            | http://localhost:3000         |
+| Prometheus         | http://localhost:9090         |
 | Prometheus Targets | http://localhost:9090/targets |
 | cAdvisor métriques | http://localhost:8081/metrics |
 
@@ -134,13 +134,13 @@ docker compose logs -f glpi
 
 ## Identifiants par défaut
 
-| Service | Utilisateur | Mot de passe |
-|---------|------------|--------------|
-| GLPI | `glpi` | `glpi` |
-| GLPI tech | `tech` | `tech` |
-| Grafana | `admin` | `Admin@Grafana2024` |
-| PostgreSQL | `grafana_user` | voir `.env` |
-| MariaDB | `glpi_user` | voir `.env` |
+|    Service |    Utilisateur |    Mot de passe     |
+|------------|----------------|---------------------|
+| GLPI       | `glpi`         | `glpi`              |
+| GLPI tech  | `tech`         | `tech`              |
+| Grafana    | `admin`        | `Admin@Grafana2024` |
+| PostgreSQL | `grafana_user` | voir `.env`         |
+| MariaDB    | `glpi_user`    | voir `.env`         |
 
 ---
 
@@ -148,10 +148,10 @@ docker compose logs -f glpi
 
 Deux dashboards sont provisionnés **automatiquement** au démarrage de Grafana :
 
-| Dashboard | Datasource | Description |
-|-----------|-----------|-------------|
-| **GLPI - Gestion des Tickets** | MySQL (MariaDB) | Tickets, statuts, catégories, équipements, SLA |
-| **Monitoring Infrastructure Docker** | Prometheus | CPU, mémoire, réseau, statut des conteneurs |
+|               Dashboard              |    Datasource   |                 Description                    |
+|--------------------------------------|-----------------|------------------------------------------------|
+| **GLPI - Gestion des Tickets**       | MySQL (MariaDB) | Tickets, statuts, catégories, équipements, SLA |
+| **Monitoring Infrastructure Docker** | Prometheus      | CPU, mémoire, réseau, statut des conteneurs    |
 
 Accès : Grafana → **Dashboards** → Browse
 
@@ -181,11 +181,11 @@ docker compose ps
 
 Accéder à http://localhost:9090/targets :
 
-| Job | Target | Statut | Explication |
-|-----|--------|--------|-------------|
-| `prometheus` | `localhost:9090` | **UP** | Prometheus se scrape lui-même |
-| `cadvisor` | `cadvisor:8080` | **UP** | Métriques Docker exposées par cAdvisor |
-| `glpi` | `glpi:80` | **DOWN** | GLPI n'expose pas de endpoint `/metrics` natif (comportement attendu) |
+|    Job       |      Target      |  Statut  |                        Explication                                    |
+|--------------|------------------|----------|-----------------------------------------------------------------------|
+| `prometheus` | `localhost:9090` | **UP**   | Prometheus se scrape lui-même                                         |
+| `cadvisor`   | `cadvisor:8080`  | **UP**   | Métriques Docker exposées par cAdvisor                                |
+| `glpi`       | `glpi:80`        | **DOWN** | GLPI n'expose pas de endpoint `/metrics` natif (comportement attendu) |
 
 ### Différence entre `scrape_interval` et `evaluation_interval`
 
@@ -201,12 +201,12 @@ rate(container_cpu_usage_seconds_total{name!=""}[5m])
 
 **Décomposition :**
 
-| Partie | Rôle |
-|--------|------|
+|               Partie                |                                           Rôle                                |
+|-------------------------------------|-------------------------------------------------------------------------------|
 | `container_cpu_usage_seconds_total` | Compteur cumulatif (counter) du temps CPU consommé par conteneur, en secondes |
-| `{name!=""}` | Filtre : exclut les conteneurs sans nom (processus système) |
-| `[5m]` | Fenêtre glissante de 5 minutes pour le calcul du taux |
-| `rate(...)` | Calcule le taux de variation moyen par seconde sur la fenêtre |
+| `{name!=""}`                        | Filtre : exclut les conteneurs sans nom (processus système)                   |
+| `[5m]`                              | Fenêtre glissante de 5 minutes pour le calcul du taux                         |
+| `rate(...)`                         | Calcule le taux de variation moyen par seconde sur la fenêtre                 |
 
 **Résultat :** la valeur représente le **nombre de secondes CPU consommées par seconde** pour chaque conteneur. Une valeur de `0.5` = 50% d'un cœur CPU utilisé en moyenne sur les 5 dernières minutes. Multiplié par 100, on obtient le pourcentage d'utilisation CPU affiché dans le dashboard.
 
