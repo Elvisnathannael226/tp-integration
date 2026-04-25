@@ -1,6 +1,6 @@
 # TP Final — Intégration Logicielle
 
-**Groupe :** Kabore Cedric, Korogo Gaetan, Tiendrebeogo Elvis
+**Groupe :** Kabore Cedric, Korogo Gaetan, Tiendrebeogo Elvis Nathannael
 
 ---
 
@@ -71,7 +71,7 @@ Ce projet déploie une infrastructure complète de gestion de parc informatique 
 ### Étape 1 — Récupérer le projet
 
 ```bash
-git clone <url-du-repo>
+git clone https://github.com/Elvisnathannael226/tp-integration.git
 cd tp-integration
 ```
 
